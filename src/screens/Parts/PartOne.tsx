@@ -6,10 +6,11 @@ import { Button, ContendItem, ImgLogo, ImgPartOne } from "../../shared/styled";
 type Props = {
     fileInit: (file: File | null) => void;
     processImage: (file: File) => void;
+    deleteImageProps: (x: boolean) => void;
 };
 
 
-export const PartOne = ({ fileInit, processImage }: Props) => {
+export const PartOne = ({ fileInit, processImage, deleteImageProps }: Props) => {
     const [selectedImage, setSelectedImage] = useState<File | any>(null);
     const [imageUrl, setImageUrl] = useState<any>(null);
     const [imageSize, setImageSize] = useState<number | null>(null);
@@ -59,6 +60,7 @@ export const PartOne = ({ fileInit, processImage }: Props) => {
         setImageSize(null);
         setImageResolution(null);
         fileInit(null);
+        deleteImageProps(true)
     };
 
     return (
@@ -76,7 +78,7 @@ export const PartOne = ({ fileInit, processImage }: Props) => {
                     <div className="input-group mb-3 justify-content-center">
                         <div className="input-group-prepend">
                             <input
-                                accept="image/*"
+                                accept=".jpg, .png"
                                 className="form-control form-control-lg"
                                 id="formFileLg"
                                 type="file"

@@ -1,16 +1,12 @@
 /** @format */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import {
-    Col,
-    Container,
     ImgLogo,
     Paragraph,
-    Row,
     SubTitle,
     Text,
-    TextContext,
     Title,
 } from "../shared/styled";
 import { PartOne } from "./Parts/PartOne";
@@ -20,10 +16,19 @@ export const Home = () => {
 
     const [fileInit, setFileInit] = useState<any>();
     const [processedImage, setProcessedImage] = useState<any>(null);
+    const [deleteImage, setDeleteImage] = useState(false);
 
     const processImage = (processedImage: any) => {
-        setProcessedImage(processedImage);
+        processedImage && setProcessedImage(processedImage);
     };
+
+
+    useEffect(() => {
+        setProcessedImage(null);
+    }, [deleteImage])
+
+
+
 
     return (
         <div className="pdf-container">
@@ -49,8 +54,9 @@ export const Home = () => {
                         y corrección.
                     </Paragraph>
                 </div>
-                <PartOne fileInit={setFileInit} processImage={processImage} />
-                {fileInit && <PartTwo fileInit={processedImage} />}
+                <PartOne fileInit={setFileInit} processImage={processImage} deleteImageProps={setDeleteImage} />
+
+                {processedImage && <PartTwo fileInit={processedImage} />}
             </div>
         </div>
     );

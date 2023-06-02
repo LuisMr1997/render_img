@@ -1,7 +1,7 @@
 /** @format */
 
 import { useState } from "react";
-import { ButtonProcess } from "../../shared/styled";
+import { ButtonProcess, ImgPartOne, SubTitle } from "../../shared/styled";
 import api from "../../utils/axios.ts";
 
 type Props = {
@@ -10,46 +10,49 @@ type Props = {
 
 export const PartTwo = ({ fileInit }: Props) => {
     const [loading, setLoading] = useState(false);
+    const [processedImageBase64, setProcessedImageBase64] = useState(null);
+    const [
+        processedImageBase64Reconstructed,
+        setProcessedImageBase64Reconstructed,
+    ] = useState(null);
 
     const sendImage = () => {
+        setLoading(true);
         if (fileInit) {
             const reader = new FileReader();
-            const promise = new Promise<string>((resolve, reject) => {
-                reader.onloadend = () => {
-                    const imageData = reader.result as string;
-                    resolve(imageData);
-                };
-                reader.onerror = () => {
-                    reject(new Error("Error al leer la imagen"));
-                };
-            });
-
-            promise
-                .then((imageData) => {
-                    // Aquí puedes realizar las operaciones necesarias con la imagen
-                    // y enviarla al API
-                    api.post("/process-image", { image: imageData })
+            reader.onload = (event) => {
+                if (event.target) {
+                    const imageData = event.target.result as string;
+                    api
+                        .post("/process-image", { image: imageData })
                         .then((response) => {
-                            // Manejar la respuesta del API
+                            setProcessedImageBase64(response.data.processed_image);
+                            setProcessedImageBase64Reconstructed(
+                                response.data.reconstructed_image
+                            );
                         })
                         .catch((error) => {
-                            // Manejar el error del API
+                            console.error("Error en la solicitud:", error);
                         })
                         .finally(() => {
                             setLoading(false);
                         });
-                })
-                .catch((error) => {
-                    console.log(error);
+                } else {
+                    console.error("Error al leer la imagen");
                     setLoading(false);
-                });
+                }
+            };
+
+            reader.onerror = () => {
+                console.error("Error al leer la imagen");
+                setLoading(false);
+            };
 
             reader.readAsDataURL(fileInit);
         } else {
             alert("Ingresa una imagen");
         }
     };
-
 
     return (
         <>
@@ -86,6 +89,30 @@ export const PartTwo = ({ fileInit }: Props) => {
                             "Procesar imagen"
                         )}
                     </ButtonProcess>
+
+                    {processedImageBase64 && (
+                        <>
+                            <div className="row">
+                                <div className="col col-6 mt-3 text-center">
+                                    <SubTitle>Imagen Procesada</SubTitle>
+                                    <ImgPartOne
+                                        src={`data:image/png;base64,${processedImageBase64}`}
+                                        alt="Processed Image"
+                                        className="img-fluid"
+                                    />
+                                </div>
+
+                                <div className="col col-6 mt-3 text-center">
+                                    <SubTitle>Imagen Reconstruida</SubTitle>
+                                    <ImgPartOne
+                                        src={`data:image/png;base64,${processedImageBase64Reconstructed}`}
+                                        alt="Reconstructed Image"
+                                        className="img-fluid"
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </>

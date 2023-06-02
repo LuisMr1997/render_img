@@ -76,16 +76,6 @@ export const ButtonProcess = styled.button`
   }
 `;
 
-export const Row = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-`;
-
-export const Col = styled.div`
-  flex: 1;
-`;
-
 export const Title = styled.h1`
   font-size: 20px;
   margin-bottom: 10px;
