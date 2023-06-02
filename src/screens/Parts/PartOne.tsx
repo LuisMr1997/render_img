@@ -1,7 +1,7 @@
 /** @format */
 
 import { useState, useEffect, ChangeEvent } from "react";
-import { ContendItem, ImgLogo, ImgPartOne } from "../../shared/styled";
+import { Button, ContendItem, ImgLogo, ImgPartOne } from "../../shared/styled";
 
 type Props = {
     fileInit: (file: any) => void;
@@ -17,7 +17,6 @@ export const PartOne = ({ fileInit }: Props) => {
     } | null>(null);
 
     const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
-
         const file = event.target.files?.[0];
         if (file) {
             fileInit(event.target.files);
@@ -53,34 +52,39 @@ export const PartOne = ({ fileInit }: Props) => {
 
     return (
         <>
-            <div className="row m-5">
-                <div className="col col-1">
-                    <ContendItem>
-                        <b>1</b>
-                    </ContendItem>
-                </div>
-                <div className="col col-11">
+            <div className="row">
+                <div className="col col-12">
                     <b>
-                        Se requiere procesar una imagen con distorsión utilizando cálculos
-                        matemáticos para realizar la detección de rostros.{" "}
+                        <b>1.- </b> Se requiere procesar una imagen con distorsión
+                        utilizando cálculos matemáticos para realizar la detección de
+                        rostros.{" "}
                     </b>
                 </div>
 
-                <div className="col col-9 mt-4 m-5">
-                    <input
-                        accept="image/*"
-                        className="form-control form-control-lg"
-                        id="formFileLg"
-                        type="file"
-                        onChange={handleImageUpload}
-                    />
+                <div className="col col-12 mt-5">
+                    <div className="input-group mb-3 justify-content-center">
+                        <div className="input-group-prepend">
+                            <input
+                                accept="image/*"
+                                className="form-control form-control-lg"
+                                id="formFileLg"
+                                type="file"
+                                onChange={handleImageUpload}
+                            />
+                        </div>
+                        {selectedImage && (
+                            <div>
+                                <Button onClick={deleteImage}>X</Button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className="col col-1 mt-4 m-5">
-                    <button onClick={deleteImage}>X</button>
-                </div>
-                {selectedImage && (
-                    <>
-                        <div className="col col-6 mt-3 text-center">
+            </div>
+
+            {selectedImage && (
+                <>
+                    <div className="row">
+                        <div className="col col-12 mt-3 text-center">
                             {selectedImage && (
                                 <ImgPartOne
                                     src={imageUrl}
@@ -89,52 +93,33 @@ export const PartOne = ({ fileInit }: Props) => {
                                 />
                             )}
                         </div>
-                        <div className="col col-6 mt-3">
-                            <ul>
-                                <li>
-                                    <div className="row">
-                                        <div className="col col-6">
-                                            <p>NOMBRE DE LA IMAGEN:</p>
-                                        </div>
-                                        <div className="col col-6">{selectedImage.name}</div>
-                                    </div>
-                                </li>
 
-                                <li>
-                                    <div className="row">
-                                        <div className="col col-6">
-                                            <p>TIPO DE IMAGEN: </p>
-                                        </div>
-                                        <div className="col col-6">{selectedImage.type}</div>
-                                    </div>
-                                </li>
+                        <div className="col col-6 mt-5 text-center">
+                            <p>
+                                Nombre de la imagen: <b>{selectedImage.name}</b>
+                            </p>
 
-                                <li>
-                                    <div className="row">
-                                        <div className="col col-6">
-                                            <p>RESOLUCION: </p>
-                                        </div>
-                                        <div className="col col-6">
-                                            {imageResolution?.width} x {imageResolution?.height}
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div className="row">
-                                        <div className="col col-6">
-                                            <p>TAMAÑO: </p>
-                                        </div>
-                                        <div className="col col-6">
-                                            {formatBytesToMB(imageSize || 0)} MB
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                            <p>
+                                Formato de imagen: <b>{selectedImage.type}</b>{" "}
+                            </p>
                         </div>
-                    </>
-                )}
-            </div>
+
+                        <div className="col col-6 mt-5 text-center">
+                            <p>
+                                Resolución:{" "}
+                                <b>
+                                    {" "}
+                                    {imageResolution?.width} x {imageResolution?.height}
+                                </b>
+                            </p>
+
+                            <p>
+                                Tamaño: <b> {formatBytesToMB(imageSize || 0)} MB</b>{" "}
+                            </p>
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     );
 };

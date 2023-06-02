@@ -47,14 +47,10 @@ export const PartTwo = ({ fileInit }: Props) => {
 
     return (
         <>
-            <div className="row m-5">
-                <div className="col col-1">
-                    <ContendItem>
-                        <b>2</b>
-                    </ContendItem>
-                </div>
-                <div className="col col-11">
+            <div className="row">
+                <div className="col col-12 mt-3">
                     <b>
+                        <b>2.- </b>
                         Para procesar la imagen y realizar la detección y procesamiento,
                         utilizamos Python como lenguaje de programación. Python nos
                         proporciona la lógica necesaria para llevar a cabo estas tareas de

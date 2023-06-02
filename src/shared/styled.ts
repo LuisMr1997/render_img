@@ -18,11 +18,12 @@ export const HeaderImage = styled.div`
 
 export const ImgLogo = styled.img`
   filter: drop-shadow(5px 5px 10px #000);
+  width: 40%;
 `;
 
 export const ImgPartOne = styled.img`
   filter: drop-shadow(5px 5px 10px #000);
-  width: 40%;
+  width: 60vh;
   height: 40vh;
   justify-content: center;
   align-items: center;
@@ -58,7 +59,65 @@ export const ContendItem = styled.div`
 export const ButtonProcess = styled.button`
   width: 300px;
   height: 100px;
-  border: 1px solid #blue;
-  border-radius: 5%;
-  background-color: #000;
+
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #000;
+    color: #fff;
+  }
+
+  &:active {
+    background-color: #ccc;
+    color: #000;
+  }
+`;
+
+export const Row = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const Col = styled.div`
+  flex: 1;
+`;
+
+export const Title = styled.h1`
+  font-size: 20px;
+  margin-bottom: 10px;
+`;
+
+export const SubTitle = styled.h1`
+  font-size: 18px;
+  margin-bottom: 10px;
+`;
+
+export const Text = styled.p`
+  margin-bottom: 10px;
+`;
+
+export const Paragraph = styled.p`
+  text-align: justify;
+  text-align-last: left;
+`;
+
+export const Button = styled.button`
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #000;
+    color: #fff;
+  }
+
+  &:active {
+    background-color: #ccc;
+    color: #000;
+  }
 `;
