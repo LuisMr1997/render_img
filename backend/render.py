@@ -46,6 +46,11 @@ def process_image(image_base64):
 
     processed_image = processed_image.filter(ImageFilter.DETAIL)
 
+    # Mejora adicional usando técnicas matemáticas
+    processed_image = processed_image.filter(ImageFilter.MedianFilter(size=3))
+    processed_image = processed_image.filter(ImageFilter.GaussianBlur(radius=1))
+    processed_image = processed_image.filter(ImageFilter.UnsharpMask(radius=1, percent=150, threshold=3))
+
     processed_image_buffer = BytesIO()
     processed_image.save(processed_image_buffer, format="PNG")
     processed_image_buffer.seek(0)
