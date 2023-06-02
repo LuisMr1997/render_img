@@ -1,7 +1,7 @@
 /** @format */
 
 import { useState } from "react";
-import { ButtonProcess, ContendItem } from "../../shared/styled";
+import { ButtonProcess } from "../../shared/styled";
 import api from "../../utils/axios.ts";
 
 type Props = {
@@ -13,37 +13,43 @@ export const PartTwo = ({ fileInit }: Props) => {
 
     const sendImage = () => {
         if (fileInit) {
-            setLoading(true);
+            const reader = new FileReader();
+            const promise = new Promise<string>((resolve, reject) => {
+                reader.onloadend = () => {
+                    const imageData = reader.result as string;
+                    resolve(imageData);
+                };
+                reader.onerror = () => {
+                    reject(new Error("Error al leer la imagen"));
+                };
+            });
 
-            const formData = new FormData();
-            formData.append("image", fileInit[0], fileInit[0].name);
-            console.log(
-                "🚀 ~ file: PartTwo.tsx:19 ~ sendImage ~ formData:",
-                formData
-            );
-
-            api
-                .post("/process-image", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                .then((response) => {
-                    if (response && response.status === 200) {
-                        const { data } = response;
-                        console.log(data);
-                    }
+            promise
+                .then((imageData) => {
+                    // Aquí puedes realizar las operaciones necesarias con la imagen
+                    // y enviarla al API
+                    api.post("/process-image", { image: imageData })
+                        .then((response) => {
+                            // Manejar la respuesta del API
+                        })
+                        .catch((error) => {
+                            // Manejar el error del API
+                        })
+                        .finally(() => {
+                            setLoading(false);
+                        });
                 })
                 .catch((error) => {
                     console.log(error);
-                })
-                .finally(() => {
                     setLoading(false);
                 });
+
+            reader.readAsDataURL(fileInit);
         } else {
             alert("Ingresa una imagen");
         }
     };
+
 
     return (
         <>

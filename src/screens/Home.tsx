@@ -17,7 +17,13 @@ import { PartOne } from "./Parts/PartOne";
 import { PartTwo } from "./Parts/PartTwo";
 
 export const Home = () => {
+
     const [fileInit, setFileInit] = useState<any>();
+    const [processedImage, setProcessedImage] = useState<any>(null);
+
+    const processImage = (processedImage: any) => {
+        setProcessedImage(processedImage);
+    };
 
     return (
         <div className="pdf-container">
@@ -43,8 +49,8 @@ export const Home = () => {
                         y corrección.
                     </Paragraph>
                 </div>
-                <PartOne fileInit={setFileInit} />
-                {fileInit && <PartTwo fileInit={fileInit} />}
+                <PartOne fileInit={setFileInit} processImage={processImage} />
+                {fileInit && <PartTwo fileInit={processedImage} />}
             </div>
         </div>
     );

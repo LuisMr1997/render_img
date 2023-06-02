@@ -4,10 +4,12 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { Button, ContendItem, ImgLogo, ImgPartOne } from "../../shared/styled";
 
 type Props = {
-    fileInit: (file: any) => void;
+    fileInit: (file: File | null) => void;
+    processImage: (file: File) => void;
 };
 
-export const PartOne = ({ fileInit }: Props) => {
+
+export const PartOne = ({ fileInit, processImage }: Props) => {
     const [selectedImage, setSelectedImage] = useState<File | any>(null);
     const [imageUrl, setImageUrl] = useState<any>(null);
     const [imageSize, setImageSize] = useState<number | null>(null);
@@ -19,12 +21,21 @@ export const PartOne = ({ fileInit }: Props) => {
     const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            fileInit(event.target.files);
+            fileInit(file);
+            processImage(file);
             setSelectedImage(file);
             const imageUrl = URL.createObjectURL(file);
-            setImageUrl(imageUrl);
+            const imageElement = document.createElement('img');
+            imageElement.onload = () => {
+                setImageUrl(imageUrl);
+            };
+            imageElement.onerror = () => {
+                alert('Error al cargar la imagen');
+            };
+            imageElement.src = imageUrl;
         }
     };
+
 
     useEffect(() => {
         if (selectedImage) {
