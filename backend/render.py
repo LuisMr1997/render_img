@@ -14,9 +14,17 @@ CORS(app)
 
 def process_image(image_base64):
     image_bytes = base64.b64decode(image_base64)
+
+    print(image_bytes)
+
     nparr = np.frombuffer(image_bytes, np.uint8)
+
+    print(nparr)
+
+    # File rendering
     image = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
 
+    # deteccion de color de imag
     is_color = len(image.shape) == 3 and image.shape[2] == 3
 
     if is_color:
@@ -43,6 +51,8 @@ def process_image(image_base64):
         processed_image = processed_image.convert("L")
 
     processed_image = processed_image.filter(ImageFilter.DETAIL)
+
+    print(processed_image)
 
     # Mejora adicional usando técnicas matemáticas
     # ImageFilter.MedianFilter: Aplica un filtro de mediana con un tamaño de ventana de 3x3 para reducir el ruido impulsivo.
@@ -72,9 +82,11 @@ def reconstruct_image(processed_image_base64):
 
     processed_image_np = np.array(processed_image)
 
+    print(processed_image_np)
     # Convertir la imagen a un tipo compatible con bilateralFilter
     processed_image_np = processed_image_np.astype(np.uint8)
 
+    print(processed_image_np)
     # Eliminación de ruido utilizando filtro bilateral
     filtered_image = cv2.bilateralFilter(processed_image_np, 9, 75, 75)
     # Denoising utilizando filtro de reducción de ruido no local
