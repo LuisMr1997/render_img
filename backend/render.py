@@ -4,9 +4,7 @@ import cv2
 from flask_cors import CORS
 import base64
 import json
-from skimage import img_as_ubyte
-from skimage import exposure
-from skimage import filters
+from skimage import img_as_ubyte, exposure, filters
 from PIL import Image, ImageFilter
 from io import BytesIO
 
@@ -47,14 +45,14 @@ def process_image(image_base64):
     processed_image = processed_image.filter(ImageFilter.DETAIL)
 
     # Mejora adicional usando técnicas matemáticas
-# ImageFilter.MedianFilter: Aplica un filtro de mediana con un tamaño de ventana de 3x3 para reducir el ruido impulsivo.
-# ImageFilter.GaussianBlur: Aplica un filtro de desenfoque gaussiano con un radio de 1 para reducir el ruido gaussiano.
-# ImageFilter.UnsharpMask: Aplica un enmascaramiento no agudo para aumentar la nitidez de los bordes en la imagen.
+    # ImageFilter.MedianFilter: Aplica un filtro de mediana con un tamaño de ventana de 3x3 para reducir el ruido impulsivo.
+    # ImageFilter.GaussianBlur: Aplica un filtro de desenfoque gaussiano con un radio de 1 para reducir el ruido gaussiano.
+    # ImageFilter.UnsharpMask: Aplica un enmascaramiento no agudo para aumentar la nitidez de los bordes en la imagen.
     processed_image = processed_image.filter(ImageFilter.MedianFilter(size=3))
+    processed_image = processed_image.filter(ImageFilter.GaussianBlur(radius=1))
     processed_image = processed_image.filter(
-        ImageFilter.GaussianBlur(radius=1))
-    processed_image = processed_image.filter(
-        ImageFilter.UnsharpMask(radius=1, percent=150, threshold=3))
+        ImageFilter.UnsharpMask(radius=1, percent=150, threshold=3)
+    )
 
     processed_image_buffer = BytesIO()
     processed_image.save(processed_image_buffer, format="PNG")
@@ -74,7 +72,12 @@ def reconstruct_image(processed_image_base64):
 
     processed_image_np = np.array(processed_image)
 
+    # Convertir la imagen a un tipo compatible con bilateralFilter
+    processed_image_np = processed_image_np.astype(np.uint8)
+
+    # Eliminación de ruido utilizando filtro bilateral
     filtered_image = cv2.bilateralFilter(processed_image_np, 9, 75, 75)
+    # Denoising utilizando filtro de reducción de ruido no local
     denoised_image = cv2.fastNlMeansDenoisingColored(
         filtered_image, None, 10, 10, 7, 21
     )
